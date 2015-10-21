@@ -2,10 +2,6 @@ import java.lang.*;
 import java.util.*;
 
 public class training{
-  private static double updateWi(List<Double> w, int i, double gradient, double alpha, List<Integer> cur){
-    return gradient * cur.get(i);
-  }
-
   private static double calGradient(List<Integer> cur, List<Double> w, int t){
     double gradient = 0;
     for(int i = 0; i<cur.size(); i++){
@@ -27,6 +23,13 @@ public class training{
     return ret;
   }
 
+  private static List<Double> initWeight(){
+    List<Double> ret = new ArrayList<Double>();
+    for(int i = 0; i < 5; i++){
+      ret.add(0.0);
+    }
+    return ret;
+  }
   public static void main(String[] args){
 
     List<List<Integer>> TS = new ArrayList<List<Integer>>();
@@ -43,31 +46,19 @@ public class training{
     t.add(-1);
     t.add(-1);
 
-    List<Double> w = new ArrayList<Double>();
-    w.add(0.0);
-    w.add(0.0);
-    w.add(0.0);
-    w.add(0.0);
-    w.add(0.0);
-
-    List<Double> deltaW = new ArrayList<Double>();
-    deltaW.add(0.0);
-    deltaW.add(0.0);
-    deltaW.add(0.0);
-    deltaW.add(0.0);
-    deltaW.add(0.0);
+    List<Double> w = initWeight(); 
+    List<Double> deltaW = initWeight();
 
     int count = 0;
-    double alpha = 0.2;
+    double alpha = 0.1;
     double gradient = 1.0;
 
     double res = 0;
     boolean sig = false;
-    int batch = 1;
+    int batch = 2;
 
     while(!sig || ((gradient < -0.2) || (gradient > 0.2))){
       if(((count+1) % batch == 0)){
-
         for(int i = 0; i < deltaW.size(); i++){
           deltaW.set(i, 0.0);
         }
@@ -79,7 +70,7 @@ public class training{
 
           deltaW.set(0, deltaW.get(0) + gradient);
 
-          for(int j = 1; j < 5; j++){
+          for(int j = 1; j < deltaW.size(); j++){
             deltaW.set(j, deltaW.get(j) + gradient * TS.get(cur).get(j));
           }
         }
